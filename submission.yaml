@@ -26,10 +26,14 @@ answers:
   # For example (the ids and values are the shape only, not a reading of any scan):
   #   triage:
   #     F-00: accepted
-  triage: {}
+  triage:
+    F-03: accepted
+    F-08: false_positive
+    F-55: valid
+    F-70: accepted
 
   # The id of the finding you triaged as valid and fixed in the file it names.
-  fixed_finding: ""
+  fixed_finding: "F-55"
 
   # The id of the finding you suppressed with the one allowlist entry in .gitleaks.toml.
-  suppressed_finding: ""
+  suppressed_finding: "F-08"

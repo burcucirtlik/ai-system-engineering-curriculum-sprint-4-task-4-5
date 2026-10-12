@@ -20,6 +20,8 @@ other setting stays where it is.
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from adapters.secrets import PROVIDER_KEY_SECRET_NAME, secret_provider
+
 
 class WorkerSettings(BaseSettings):
     """Describe the protected runtime configuration for the worker service."""
@@ -49,12 +51,6 @@ class WorkerSettings(BaseSettings):
     model_timeout_ms: int = Field(default=2_000, ge=1, le=30_000)
     model_provider_max_attempts: int = Field(default=2, ge=1, le=5)
     model_retry_backoff_ms: int = Field(default=100, ge=0, le=10_000)
-    # The model provider's key. At this checkpoint it is a string default here, in the
-    # repository, and `provider_key` below returns it: every clone, fork and old commit
-    # holds it, and every deployment that does not override it runs with it. Task 4.5's
-    # Step 1 replaces this with a read through the supplied SecretProvider adapter
-    # (docs/fidelity/SecretProvider.md names the secret and shows the call).
-    model_provider_key: str = Field(default="coldline-dev-provider-key-v1", min_length=1)
     # Task 4.4 tooling. When set, the model emulator writes the text of every request it
     # receives to one file per exception under this directory, inside the worker
     # container, so `poe pii-scan` can read what the provider was sent
@@ -97,10 +93,9 @@ class WorkerSettings(BaseSettings):
         """Return the model provider key for one use.
 
         The model client awaits this every time it sends a request, so what it returns is
-        the key the provider authenticates for that request. At this checkpoint it returns
-        the string default above. Task 4.5's Step 1 makes it a read through the supplied
-        ``SecretProvider`` adapter, made here, each time the worker needs the key, rather
-        than once when the settings load: the emulator accepts only the current version,
-        and a value read once and kept is refused the moment the key is replaced.
+        the key the provider authenticates for that request. It is a read through the
+        supplied ``SecretProvider`` adapter, made here, each time the worker needs the key,
+        rather than once when the settings load: the emulator accepts only the current
+        version, and a value read once and kept is refused the moment the key is replaced.
         """
-        return self.model_provider_key
+        return await secret_provider(self).read(PROVIDER_KEY_SECRET_NAME)

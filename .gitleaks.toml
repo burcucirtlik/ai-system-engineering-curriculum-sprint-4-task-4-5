@@ -27,3 +27,10 @@ id = "coldline-provider-key"
 description = "Coldline model-provider key"
 regex = '''\bcpk_[A-Za-z0-9]{32}\b'''
 keywords = ["cpk_"]
+
+# F-08: the eight JWTs are the Task 4.2 token fixtures, signed with the local development
+# issuer's fixed key; only this stack's API trusts that issuer, so a copy grants nothing
+# outside the stack. Decided 2026-10-12.
+[[allowlists]]
+targetRules = ["jwt"]
+paths = ['''^tests/fixtures/tokens/fixtures\.yaml$''']

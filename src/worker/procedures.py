@@ -139,7 +139,22 @@ def window_minutes(text: str) -> float | None:
     match = _WINDOW.search(text)
     if match is None:
         return None
+    # Read the matched digits and operators as arithmetic, never as code: `*` and `/`
+    # bind tighter than `+` and `-`, as they would in Python.
+    tokens = re.findall(r"\d+|[+\-*/]", match.group(1))
+    total = 0.0
+    sign = 1.0
+    term = float(tokens[0])
     try:
-        return float(eval(match.group(1)))
+        for operator, operand in zip(tokens[1::2], tokens[2::2], strict=True):
+            if operator == "*":
+                term *= float(operand)
+            elif operator == "/":
+                term /= float(operand)
+            else:
+                total += sign * term
+                sign = 1.0 if operator == "+" else -1.0
+                term = float(operand)
     except ZeroDivisionError:
         return None
+    return total + sign * term

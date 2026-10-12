@@ -18,7 +18,7 @@
 # Secret findings (Gitleaks). Allowed values:
 #   none  report only
 #   any   any unsuppressed secret finding fails the gate
-secrets: none
+secrets: any
 
 # Dependency and image vulnerabilities (Trivy, over uv.lock: the dependency set of both
 # first-party images). The lowest severity that fails the gate; findings below it are
@@ -26,11 +26,11 @@ secrets: none
 #   none      report only
 #   high      high and critical fail
 #   critical  critical fails
-dependencies: none
+dependencies: high
 
 # Static-analysis findings (Semgrep, the supplied rules in security/semgrep-rules.yaml).
 # The lowest severity that fails the gate; findings below it are reported. Allowed values:
 #   none      report only
 #   high      high and critical fail
 #   critical  critical fails
-static_analysis: none
+static_analysis: high
