@@ -1,5 +1,0 @@
-# Coldline - Task 4.5
-# Supplied seed for the Step 4 demonstration branch: a pinned release with a published
-# high-severity vulnerability, read by Trivy beside uv.lock. Nothing installs it. Commit
-# it on a draft branch, watch the gate fail, revert, and never merge the branch.
-pyyaml==5.3
