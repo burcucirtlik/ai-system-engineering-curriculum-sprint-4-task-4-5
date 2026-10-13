@@ -1,0 +1,6 @@
+# Coldline - Task 4.5
+# Supplied seed for the Step 4 demonstration branch: a fake model-provider key in the
+# Coldline provider-key format. It is a credential of nothing and grants nothing; it
+# exists so the security gate can be shown refusing a committed key. Commit it on a
+# draft branch, watch the gate fail, revert, and never merge the branch.
+model_provider_key = cpk_18a207468501966296977e5d73497dc7
